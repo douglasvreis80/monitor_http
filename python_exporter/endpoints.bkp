@@ -1,0 +1,10 @@
+endpoints:
+  - url: "https://int-backend-duxcloud.minervafoods.com:1851/Health"
+    name: "Example"
+  - url: "https://int-backend-duxcloud.minervafoods.com:1843/Health"
+    name: "Test"
+  - url: "https://app.hit.com.vc/"
+    name: "HIT"
+  - url: "http://172.25.2.174"
+    name: "Apachezinho"
+

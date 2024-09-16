@@ -1,0 +1,54 @@
+services:
+
+  apache:
+    image: httpd
+    ports:
+      - "80:80"
+
+  python_exporter:
+    build: ./python_exporter/
+    ports:
+      - "5000:5000"
+      - "8000:8000"
+    volumes:
+      - ./python_exporter/endpoints.yml:/app/endpoints.yml  # Para que o arquivo de endpoints possa ser atualizado dinamicamente
+
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox.yml:/etc/blackbox_exporter/config.yml
+
+  prometheus:
+    image: prom/prometheus:v2.33.5
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./etc/prometheus:/workspace
+    command:
+      - '--config.file=/workspace/prometheus.yml'
+
+  alertmanager:
+    image: prom/alertmanager
+    volumes:
+      - ./etc/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - '9093:9093'
+
+  grafana:
+    image: grafana/grafana:8.4.3
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./etc/grafana/:/etc/grafana/provisioning/datasources
+      - ./etc/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./etc/dashboards:/etc/grafana/dashboards
+    depends_on:
+      - prometheus
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      GF_AUTH_DISABLE_LOGIN_FORM: "true"
