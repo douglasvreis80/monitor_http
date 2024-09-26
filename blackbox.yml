@@ -6,3 +6,15 @@ modules:
       valid_http_versions: ["HTTP/1.1", "HTTP/2"]
       valid_status_codes: []  # Quer dizer que todos os códigos 2xx são válidos
       method: GET
+
+  http_2xx_authenticated:
+    prober: http
+    http:
+      method: GET
+      valid_http_versions: [ "HTTP/1.1", "HTTP/2" ]
+      fail_if_not_ssl: true
+      fail_if_ssl: false
+      bearer_token: "ed1a3f7aa2454487829c72d5187eb070"  # Token de Produção
+      preferred_ip_protocol: "ip4"  # Use "ip6" se necessário
+      valid_status_codes: []  # Por padrão, aceita qualquer código de status 2xx
+

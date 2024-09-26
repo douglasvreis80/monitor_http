@@ -9,3 +9,14 @@ groups:
     annotations:
       summary: "Endpoint down"
       description: "The HTTP endpoint '{{ $labels.name }}' is down. Status code is 0."
+
+- name: HTTP Probe Alerts
+  rules:
+    - alert: HTTPProbeFailure
+      expr: probe_http_status_code != 200
+      for: 5m  # O alerta só será disparado se a condição persistir por 5 minutos
+      labels:
+        severity: critical
+      annotations:
+        summary: "HTTP Probe Failure"
+        description: "O probe HTTP {{ $labels.instance }} falhou com status {{ $value }}."
