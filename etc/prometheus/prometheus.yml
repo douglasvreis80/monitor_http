@@ -13,6 +13,7 @@ alerting:
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
     - "alert_rules.yml"
+    - "http_requests_alerts.yml"
   # - "first_rules.yml"
   # - "second_rules.yml"
 
@@ -35,6 +36,16 @@ scrape_configs:
   - job_name: 'teste'
     static_configs:
       - targets: ['172.25.2.174:5070']
+
+
+  - job_name: 'BidTrader'
+    metrics_path: /BidTrader/metrics
+    scheme: https
+    static_configs:
+      - targets: ['dev-backend-duxcloud.minervafoods.com:2024']
+    tls_config:
+      # Indica se o Prometheus deve verificar o certificado do servidor
+      insecure_skip_verify: true # Defina como false em produção caso tenha os certificados corretos
 
   - job_name: 'blackbox-multiembarcador'
     metrics_path: /probe
