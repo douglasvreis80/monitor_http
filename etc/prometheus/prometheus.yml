@@ -48,6 +48,7 @@ scrape_configs:
       insecure_skip_verify: true # Defina como false em produção caso tenha os certificados corretos
 
   - job_name: 'blackbox-multiembarcador'
+    metrics_path: /probe
     params:
       module: [http_2xx_authenticated]  # Usando o módulo com autenticação
     static_configs:
