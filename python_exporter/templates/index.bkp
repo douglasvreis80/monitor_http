@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerenciamento de Endpoints</title>
+</head>
+<body>
+    <h1>Endpoints</h1>
+    <ul id="endpoints-list"></ul>
+
+    <h2>Adicionar Endpoint</h2>
+    <form id="add-endpoint-form">
+        <input type="text" id="url" placeholder="URL do Endpoint" required>
+        <input type="text" id="name" placeholder="Nome do Endpoint" required>
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <script>
+        // Função para carregar e exibir os endpoints
+        function loadEndpoints() {
+            fetch('/endpoints').then(response => response.json()).then(data => {
+                const list = document.getElementById('endpoints-list');
+                list.innerHTML = '';
+                data.endpoints.forEach(endpoint => {
+                    list.innerHTML += `<li>${endpoint.name} - ${endpoint.url} 
+                                       <button onclick="removeEndpoint('${endpoint.name}')">Remover</button></li>`;
+                });
+            });
+        }
+
+        // Adicionar novo endpoint
+        document.getElementById('add-endpoint-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const url = document.getElementById('url').value;
+            const name = document.getElementById('name').value;
+
+            fetch('/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, name })
+            }).then(() => {
+                loadEndpoints();  // Atualizar a lista após adicionar
+                document.getElementById('add-endpoint-form').reset();
+            });
+        });
+
+        // Remover endpoint
+        function removeEndpoint(name) {
+            fetch('/remove', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name })
+            }).then(() => loadEndpoints());
+        }
+
+        // Carregar endpoints ao carregar a página
+        loadEndpoints();
+    </script>
+</body>
+</html>

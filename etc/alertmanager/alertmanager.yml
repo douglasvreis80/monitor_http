@@ -8,8 +8,6 @@ route:
 
 receivers:
   - name: 'combined-receivers'
-    webhook_configs:
-      - url: 'https://prod-53.westus.logic.azure.com:443/workflows/fabcdb2906ca46098e1020f061443f7f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LG0nWSkFFdVsgjhtlSOMNKby_aLbzPV2Z4hTDCVQSV4'
-        send_resolved: true
+    webhook_configs:     
       - url: 'http://172.25.2.174:8001/webhook'
         send_resolved: true

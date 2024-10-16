@@ -1,0 +1,14 @@
+global:
+  # Configurações globais podem ser omitidas se não forem usadas.
+  # Se for necessário configurar autenticação de e-mail ou outras opções, adicione-as aqui.
+
+route:
+  # Define a rota padrão para os alertas.
+  receiver: 'teams'
+
+receivers:
+  - name: 'teams'
+    webhook_configs:
+      - url: 'https://prod-53.westus.logic.azure.com:443/workflows/fabcdb2906ca46098e1020f061443f7f/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=LG0nWSkFFdVsgjhtlSOMNKby_aLbzPV2Z4hTDCVQSV4'
+        send_resolved: true
+
