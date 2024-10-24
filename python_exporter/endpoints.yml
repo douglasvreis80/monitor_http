@@ -1,6 +1,4 @@
 endpoints:
-  - url: "http://172.25.2.174"
-    name: "Apache"
   - url: "https://int-backend-duxcloud.minervafoods.com:1871/Health"
     name: "DbMinervaAPI"
   - url: "https://int-backend-duxcloud.minervafoods.com:1851/Health"
