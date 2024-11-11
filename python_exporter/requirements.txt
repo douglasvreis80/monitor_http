@@ -1,4 +1,0 @@
-Flask
-prometheus_client
-PyYAML
-requests

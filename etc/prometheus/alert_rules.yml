@@ -1,14 +1,4 @@
 groups:
-- name: example_alert_rules
-  rules:
-  - alert: HttpEndpointDown
-    expr: http_health_check{name=~".+"} == 0
-    for: 5m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Endpoint down"
-      description: "The HTTP endpoint '{{ $labels.name }}' is down. Status code is 0."
 
 - name: HTTP Probe Alerts
   rules:
