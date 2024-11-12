@@ -1,13 +1,5 @@
 services:
 
-  python_exporter:
-    build: ./python_exporter/
-    ports:
-      - "5000:5000"
-      - "8000:8000"
-    volumes:
-      - ./python_exporter/endpoints.yml:/app/endpoints.yml  # Para que o arquivo de endpoints possa ser atualizado dinamicamente
-
   blackbox-exporter:
     image: prom/blackbox-exporter:latest
     ports:
