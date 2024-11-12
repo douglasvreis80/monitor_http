@@ -1,6 +1,6 @@
 global:
   scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
-  evaluation_interval: 1m # Evaluate rules every 15 seconds. The default is every 1 minute.
+  evaluation_interval: 1m # Evaluate rules every 1 minute.
   # scrape_timeout is set to the global default (10s).
 
 # Alertmanager configuration
@@ -8,11 +8,11 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9093
+            - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
-    - "alert_rules.yml"
+  - "alert_rules.yml"
   # - "http_requests_alerts.yml"
   # - "first_rules.yml"
   # - "second_rules.yml"
@@ -21,13 +21,93 @@ rule_files:
 # Here it's Prometheus itself.
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+
+  - job_name: 'BidTrader'
+    metrics_path: /BidTrader/metrics
+    scheme: https
+    static_configs:
+      - targets: ['dev-backend-duxcloud.minervafoods.com:2024']
+    tls_config:
+      # Indica se o Prometheus deve verificar o certificado do servidor
+      insecure_skip_verify: true # Defina como false em produção caso tenha os certificados corretos
+
   - job_name: "prometheus"
-
-    # metrics_path defaults to '/metrics'
-    # scheme defaults to 'http'.
-
     static_configs:
       - targets: ["localhost:9090"]
+
+  - job_name: 'blackbox-minerva-api'
+    metrics_path: /probe
+    params:
+      module: [http_2xx_authenticated]  # Usando o módulo com autenticação
+    static_configs:
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1871/Health
+        labels:
+          name: "DbMinervaAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1851/Health
+        labels:
+          name: "IntegrationControlAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1831/Health
+        labels:
+          name: "ComexAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1781/Health
+        labels:
+          name: "FaturamentoAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1722/Health
+        labels:
+          name: "PessoaAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1741/Health
+        labels:
+          name: "SuprimentosAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1861/Health
+        labels:
+          name: "RoadnetAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1846/Health
+        labels:
+          name: "SupFriAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1840/Health
+        labels:
+          name: "DataSourceAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1841/Health
+        labels:
+          name: "ExchangeAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1842/Health
+        labels:
+          name: "ReceiverAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1843/Health
+        labels:
+          name: "IntegrationAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1844/Health
+        labels:
+          name: "InvoiceEventAPI"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:3851/Health
+        labels:
+          name: "IntegrationControlAPI.Replica1"
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:2022/swagger/
+        labels:
+          name: "OcelotGateway"
+
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Endereço do Blackbox Exporter
+      - source_labels: [__param_target]
+        target_label: instance
 
   - job_name: 'blackbox-multiembarcador'
     metrics_path: /probe
@@ -35,14 +115,38 @@ scrape_configs:
       module: [http_2xx_authenticated]  # Usando o módulo com autenticação
     static_configs:
       - targets:
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/Cargas.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/CTe.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/NFS.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/NFe.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/MDFe.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/Ocorrencias.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/JanelaCarregamento.svc
-        - https://minervafoods.multiembarcador.com.br/SGT.WebService/Empresa.svc
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/Cargas.svc
+        labels:
+          name: "CargasService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/CTe.svc
+        labels:
+          name: "CTeService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/NFS.svc
+        labels:
+          name: "NFSService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/NFe.svc
+        labels:
+          name: "NFeService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/MDFe.svc
+        labels:
+          name: "MDFeService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/Ocorrencias.svc
+        labels:
+          name: "OcorrenciasService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/JanelaCarregamento.svc
+        labels:
+          name: "JanelaCarregamentoService"
+      - targets:
+          - https://minervafoods.multiembarcador.com.br/SGT.WebService/Empresa.svc
+        labels:
+          name: "EmpresaService"
+
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
