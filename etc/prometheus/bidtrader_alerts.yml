@@ -1,0 +1,11 @@
+groups:
+- name: bidtrader_alerts
+  rules:
+  - alert: HighHTTPErrorRate
+    expr: (rate(http_request_duration_seconds_count{code!~"2.."}[5m]) / rate(http_request_duration_seconds_count[5m])) > 0.1
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: "Alta taxa de erros HTTP detectada"
+      description: "A taxa de erros HTTP está acima de 10% nos últimos 5 minutos em {{ $labels.job }}"

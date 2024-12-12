@@ -1,0 +1,11 @@
+groups:
+- name: system_alerts
+  rules:
+  - alert: HighFailedHTTPRequestRate
+    expr: rate(system_net_http_requests_failed[5m]) > 10
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Alta taxa de falha de requisições HTTP"
+      description: "A taxa de falha de requisições HTTP é superior a 10 requisições/segundo nos últimos 5 minutos em {{ $labels.job }}"

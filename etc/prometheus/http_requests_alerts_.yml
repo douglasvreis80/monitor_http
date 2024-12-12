@@ -1,0 +1,11 @@
+groups:
+- name: HTTPRequestsAlerts
+  rules:
+  - alert: LowFastHTTPRequests
+    expr: (sum(rate(http_request_duration_seconds_bucket{le="0.512"}[5m])) by (job) / sum(rate(http_request_duration_seconds_count[5m])) by (job)) < 0.95
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Low Percentage of Fast HTTP Requests (≤ 0.512s)"
+      description: "The percentage of HTTP requests completing in ≤ 0.512s is below 95% for job {{ $labels.job }}."

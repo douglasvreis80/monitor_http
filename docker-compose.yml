@@ -3,14 +3,22 @@ services:
   blackbox-exporter:
     image: prom/blackbox-exporter
     ports:
-      - "9115:9115"
+      - "9116:9115"
     volumes:
       - ./blackbox.yml:/etc/blackbox_exporter/config.yml
 
-  prometheus:
-    image: prom/prometheus
+  python_exporter:
+    build: ./python_exporter/
     ports:
-      - "9090:9090"
+      - "5001:5000"
+      - "8002:8000"
+    volumes:
+      - ./python_exporter/endpoints.yml:/app/endpoints.yml  # Para que o arquivo de endpoints possa ser atualizado dinamicamente
+
+  prometheus:
+    image: prom/prometheus:v3.0.1
+    ports:
+      - "9091:9090"
     volumes:
       - ./etc/prometheus:/workspace
       - prometheus_data:/prometheus  # Persistência dos dados do Prometheus
@@ -20,7 +28,7 @@ services:
   alertmanager:
     image: prom/alertmanager
     ports:
-      - '9093:9093'
+      - '9094:9093'
     volumes:
       - ./etc/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml  # Persistência da configuração
       - alertmanager_data:/data  # Persistência dos dados do Alertmanager
@@ -28,9 +36,9 @@ services:
       - '--config.file=/etc/alertmanager/alertmanager.yml'
 
   grafana:
-    image: grafana/grafana
+    image: grafana/grafana-oss:11.4.0
     ports:
-      - "3000:3000"
+      - "3001:3000"
     volumes:
       - ./etc/grafana/:/etc/grafana/provisioning/datasources  # Persistência dos datasources
       - ./etc/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml  # Configuração de provisionamento de dashboards
@@ -38,10 +46,7 @@ services:
       - grafana_data:/var/lib/grafana  # Persistência dos dados do Grafana (incluindo dashboards)
     depends_on:
       - prometheus
-    environment:
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
-      GF_AUTH_DISABLE_LOGIN_FORM: "true"
+    
 
 volumes:
   prometheus_data:
