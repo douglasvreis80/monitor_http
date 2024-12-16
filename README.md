@@ -76,8 +76,8 @@ This stack allows for monitoring and alerting by combining the following compone
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/your-repo/monitoring-stack.git
-   cd monitoring-stack
+   git clone https://github.com/douglasvreis80/monitor_http.git
+   cd monitor_http
    ```
 
 2. Build the Python Exporter:
