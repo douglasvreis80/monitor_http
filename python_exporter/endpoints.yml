@@ -31,3 +31,5 @@ endpoints:
     name: "OcelotGateway"
   - url: "https://backend-duxcloud.minervafoods.com:2022/BidTrader/health"
     name: "BidTrader"
+  - url: "https://pecuarista.minervafoods.com:8096/"
+    name: "AppPecuarista"

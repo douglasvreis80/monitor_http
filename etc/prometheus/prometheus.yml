@@ -54,6 +54,16 @@ scrape_configs:
       # Indica se o Prometheus deve verificar o certificado do servidor
       insecure_skip_verify: true # Defina como false em produção caso tenha os certificados corretos
 
+  - job_name: 'wminbageapp01.authlibrary.api'
+    metrics_path: /metrics
+    scheme: https
+    static_configs:
+      - targets: ['wminageapp01:9051']
+    tls_config:
+      # Indica se o Prometheus deve verificar o certificado do servidor
+      insecure_skip_verify: true # Defina como false em produção caso tenha os certificados corretos
+
+
 
   - job_name: 'blackbox-multiembarcador'
     metrics_path: /probe
