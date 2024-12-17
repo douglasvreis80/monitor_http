@@ -64,6 +64,17 @@ This stack allows for monitoring and alerting by combining the following compone
 - Configuration: Datasources and dashboards provisioned from `./etc/grafana/`.
 - Persisted data: `grafana_data` volume.
 
+### 6. **Alert Messenger**
+- **Image**: `douglasvreis80/alert-messenger:1.1`
+- **Purpose**: Receives alerts and forwards them via WhatsApp.
+- **Port**: `8001`
+- **Configuration**: 
+  - **Environment Variables**:
+    - `GROUP_ID`: The WhatsApp group ID to send messages.
+  - **Working Directory**: `/wwebjs-bot`
+- **Command**: `npm start`
+- **Restart Policy**: `unless-stopped`
+
 ---
 
 ## Setup
@@ -96,8 +107,25 @@ This stack allows for monitoring and alerting by combining the following compone
    - **Blackbox Exporter**: [http://localhost:9116](http://localhost:9116)
    - **Python Exporter**: [http://localhost:5001](http://localhost:5001)
    - **Alertmanager**: [http://localhost:9094](http://localhost:9094)
-
 ---
+### Connecting the Device to Alert Messenger
+
+1. Ensure the stack is running:
+   ```bash
+   docker-compose up -d
+   ```
+
+2. Open the logs for the alert-messenger container to view the QR Code:
+    ```bash
+   docker logs -f alert-messenger
+    ```
+
+3.  Scan the QR Code using the WhatsApp Web feature on your mobile device:
+      Open WhatsApp on your phone.
+      Go to Settings > Linked Devices > Link a Device.
+      Scan the QR Code displayed in the logs.
+
+Once connected, the container will be able to send WhatsApp messages automatically.
 
 ## Configuration
 
