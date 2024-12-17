@@ -9,5 +9,5 @@ route:
 receivers:
   - name: 'combined-receivers'
     webhook_configs:     
-      - url: 'http://172.25.2.174:8001/webhook'
+      - url: 'http://alert-messenger:8001/webhook'
         send_resolved: true
