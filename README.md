@@ -121,9 +121,9 @@ This stack allows for monitoring and alerting by combining the following compone
     ```
 
 3.  Scan the QR Code using the WhatsApp Web feature on your mobile device:
-   1. Open WhatsApp on your phone.
-   2. Go to Settings > Linked Devices > Link a Device.
-   3. Scan the QR Code displayed in the logs.
+      Open WhatsApp on your phone.
+      Go to Settings > Linked Devices > Link a Device.
+      Scan the QR Code displayed in the logs.
 
 Once connected, the container will be able to send WhatsApp messages automatically.
 
