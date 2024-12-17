@@ -8,7 +8,7 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-          - alertmanager:9094
+          - alertmanager:9093
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
@@ -62,6 +62,83 @@ scrape_configs:
       # Indica se o Prometheus deve verificar o certificado do servidor
       insecure_skip_verify: true # Defina como false em produção caso tenha os certificados corretos
 
+
+  - job_name: 'blackbox-apis-duxcloud'
+    metrics_path: /probe
+    params:
+      module: [http_2xx_authenticated]  # Usando o módulo com autenticação
+    static_configs:
+      - targets:
+          - https://int-backend-duxcloud.minervafoods.com:1722/Health
+          - https://int-backend-duxcloud.minervafoods.com:1741/Health
+          - https://int-backend-duxcloud.minervafoods.com:1861/Health
+          - https://int-backend-duxcloud.minervafoods.com:1846/Health
+          - https://int-backend-duxcloud.minervafoods.com:1840/Health
+          - https://int-backend-duxcloud.minervafoods.com:1841/Health
+          - https://int-backend-duxcloud.minervafoods.com:1842/Health
+          - https://int-backend-duxcloud.minervafoods.com:1843/Health
+          - https://int-backend-duxcloud.minervafoods.com:1844/Health
+          - https://int-backend-duxcloud.minervafoods.com:3851/Health
+          - https://int-backend-duxcloud.minervafoods.com:2022/swagger/
+          - https://backend-duxcloud.minervafoods.com:2022/BidTrader/health
+          
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Endereço do Blackbox Exporter
+      - source_labels: [__param_target]
+        target_label: instance
+      # Adicionando rótulos amigáveis como service_name
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1722/Health
+        target_label: service_name
+        replacement: PessoaAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1741/Health
+        target_label: service_name
+        replacement: SuprimentosAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1861/Health
+        target_label: service_name
+        replacement: RoadnetAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1846/Health
+        target_label: service_name
+        replacement: SupFriAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1840/Health
+        target_label: service_name
+        replacement: DataSourceAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1841/Health
+        target_label: service_name
+        replacement: ExchangeAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1842/Health
+        target_label: service_name
+        replacement: ReceiverAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1843/Health
+        target_label: service_name
+        replacement: IntegrationAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:1844/Health
+        target_label: service_name
+        replacement: InvoiceEventAPI
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:3851/Health
+        target_label: service_name
+        replacement: IntegrationControlAPI.Replica1
+      - source_labels: [__param_target]
+        regex: https://int-backend-duxcloud\.minervafoods\.com:2022/swagger/
+        target_label: service_name
+        replacement: OcelotGateway
+      - source_labels: [__param_target]
+        regex: https://backend-duxcloud\.minervafoods\.com:2022/BidTrader/health
+        target_label: service_name
+        replacement: BidTrader
+
   - job_name: 'blackbox-multiembarcador'
     metrics_path: /probe
     params:
@@ -83,3 +160,63 @@ scrape_configs:
         replacement: blackbox-exporter:9115  # Endereço do Blackbox Exporter
       - source_labels: [__param_target]
         target_label: instance
+
+      # Adicionando rótulos amigáveis como service_name
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/Cargas\.svc
+        target_label: service_name
+        replacement: Multiembarcador - Cargas
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/CTe\.svc
+        target_label: service_name
+        replacement: Multiembarcador - CTe
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/NFS\.svc
+        target_label: service_name
+        replacement: Multiembarcador - NFS
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/NFe\.svc
+        target_label: service_name
+        replacement: Multiembarcador - NFe
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/MDFe\.svc
+        target_label: service_name
+        replacement: Multiembarcador - MDFe
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/Ocorrencias\.svc
+        target_label: service_name
+        replacement: Multiembarcador - Ocorrências
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/JanelaCarregamento\.svc
+        target_label: service_name
+        replacement: Multiembarcador - Janela de Carregamento
+      - source_labels: [__param_target]
+        regex: https://minervafoods\.multiembarcador\.com\.br/SGT\.WebService/Empresa\.svc
+        target_label: service_name
+        replacement: Multiembarcador - Empresa
+
+
+  - job_name: 'blackbox-api-apppecuarista'
+    metrics_path: /probe
+    params:
+      module: [http_2xx_authenticated]  # Usando o módulo com autenticação
+    static_configs:
+      - targets:
+        - https://pecuarista.minervafoods.com:8095/api/
+        - https://pecuarista.minervafoods.com:8096/
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - target_label: __address__
+        replacement: blackbox-exporter:9115  # Endereço do Blackbox Exporter
+      - source_labels: [__param_target]
+        target_label: instance
+
+      - source_labels: [__param_target]
+        regex: https://pecuarista\.minervafoods\.com:8095/api/
+        target_label: service_name
+        replacement: API - App Pecuarista - Porta 8095
+      - source_labels: [__param_target]
+        regex: https://pecuarista\.minervafoods\.com:8096/
+        target_label: service_name
+        replacement: CMS - App Pecuarista - Porta 8096

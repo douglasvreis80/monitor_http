@@ -13,7 +13,7 @@ groups:
 - name: HTTP Probe Alerts
   rules:
     - alert: HTTPProbeFailure
-      expr: probe_http_status_code != 200
+      expr: probe_http_status_code != 200 and probe_http_status_code != 401
       for: 5m  # O alerta só será disparado se a condição persistir por 5 minutos
       labels:
         severity: critical
