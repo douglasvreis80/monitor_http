@@ -30,6 +30,7 @@ This stack allows for monitoring and alerting by combining the following compone
 - **Blackbox Exporter**: Monitors the status of HTTP endpoints.
 - **Python Exporter**: Custom exporter to dynamically monitor endpoints.
 - **Alertmanager**: Sends alerts based on Prometheus rules.
+- **Alertmessenger**: Receives alerts and forwards them via WhatsApp.
 
 ---
 
